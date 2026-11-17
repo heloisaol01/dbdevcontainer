@@ -2,7 +2,7 @@ CREATE TABLE pessoa(
     cpf CHAR(11) NOT NULL,
     email VARCHAR(50) NOT NULL,
     nome VARCHAR(150) NOT NULL,
-    data_nasc DATE NOT NULL,
+    dt_nasc DATE NOT NULL,
     endereco VARCHAR(300) NOT NULL,
     telefone VARCHAR(15) NULL,
 

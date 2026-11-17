@@ -41,3 +41,22 @@ UPDATE agendamento SET dh_consulta = DATE '1783-05-19' + dh_consulta::time,
 UPDATE medico_especialidade SET id_especialidade = '01' WHERE cpf_medico = '004' AND id_especialidade = '02';
 
 -- DELETE de dados
+DELETE FROM agendamento WHERE cpf_paciente = '002' AND dh_consulta::date = '1783-05-19';
+
+DELETE FROM agendamento  WHERE cpf_medico = '001' AND valor_consulta = 0.0;
+
+DELETE FROM agendamento WHERE cpf_paciente IN (
+        SELECT cpf_pessoa 
+        FROM paciente WHERE plano_saude IS TRUE OR cpf_pessoa IN  --antes de remover os pacientes, precisa remover os agendamentos deles (pois nao usou o cascade no ddl)
+            (SELECT cpf FROM pessoa WHERE telefone IS NULL)
+);
+
+DELETE FROM paciente
+    WHERE plano_saude IS TRUE OR cpf_pessoa IN 
+        (SELECT cpf FROM pessoa WHERE telefone IS NULL);
+
+-- mesma lógica anterior, p/ remover o medico precisamos remover seus vínculos primeiro
+DELETE FROM agendamento WHERE cpf_medico = '004';
+DELETE FROM medico_especialidade WHERE cpf_medico = '004';
+DELETE FROM medico WHERE cpf_pessoa = '004';
+DELETE FROM pessoa WHERE cpf = '004';
